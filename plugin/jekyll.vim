@@ -18,12 +18,12 @@ endif
 
 " Extension used when creating new posts
 if ! exists('g:jekyll_post_extension')
-  let g:jekyll_post_extension = '.markdown'
+  let g:jekyll_post_extension = '.md'
 endif
 
 " Filetype applied to new posts
 if ! exists('g:jekyll_post_filetype')
-  let g:jekyll_post_filetype = 'liquid'
+  let g:jekyll_post_filetype = 'markdown'
 endif
 
 " Template for new posts
@@ -33,6 +33,9 @@ if ! exists('g:jekyll_post_template')
     \ 'layout: post',
     \ 'title: "JEKYLL_TITLE"',
     \ 'date: "JEKYLL_DATE"',
+    \ 'category: 杂',
+    \ 'tags:',
+    \ '  - ',
     \ '---',
     \ '']
 endif
@@ -113,6 +116,7 @@ function! s:post_list(A, L, P)
   let prefix   = b:jekyll_post_dir.'/'
   let data     = s:gsub(glob(prefix.'*.*')."\n", prefix, '')
   let data     = s:gsub(data, '\'.g:jekyll_post_extension."\n", "\n")
+  let data     = s:gsub(data, '\d\d\d\d-\d\d-\d\d-', '')
   let files    = reverse(split(data, "\n"))
   " select the completion candidates using a substring match on the first argument
   " instead of a prefix match (I consider this to be more user friendly)
@@ -162,7 +166,14 @@ endfunction
 
 " Edit a post
 function! s:edit_post(cmd, post)
-  let file = b:jekyll_post_dir.'/'.a:post.g:jekyll_post_extension
+  let prefix   = b:jekyll_post_dir.'/'
+  let data     = s:gsub(glob(prefix.'*.*')."\n", prefix, '')
+  let data     = s:gsub(data, '\'.g:jekyll_post_extension."\n", "\n")
+  let files    = split(data, "\n")
+  let data     = s:gsub(data, '\d\d\d\d-\d\d-\d\d-', '')
+  let files_   = split(data, "\n")
+  let idx      = index(files_, a:post)
+  let file = b:jekyll_post_dir.'/'.files[idx].g:jekyll_post_extension
 
   if filereadable(file)
     return s:load_post(a:cmd, file)
