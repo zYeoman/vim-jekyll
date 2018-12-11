@@ -260,6 +260,7 @@ function! s:register_commands()
     call s:define_command('-bang -nargs=? -complete=customlist,s:post_list J'.cmd.'post :call s:open_post(<bang>0, "'.cmd.'", <q-args>)')
   endfor
 
+  call s:define_command('-bang -nargs=? -complete=customlist,s:post_list ed :call s:open_post(<bang>0, "V", <q-args>)')
   call s:define_command('-nargs=* Jbuild call s:jekyll_build("<args>")')
   call s:define_command('-nargs=* Jserve call s:jekyll_serve("<args>")')
 endfunction
